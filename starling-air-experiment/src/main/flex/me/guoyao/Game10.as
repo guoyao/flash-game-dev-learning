@@ -3,6 +3,8 @@ package me.guoyao
 	import flash.display.Bitmap;
 	import flash.geom.Point;
 	
+	import me.guoyao.utils.Assets;
+	
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -17,9 +19,6 @@ package me.guoyao
 		private var mRenderTexture:RenderTexture;
 		private var mBrush:Image;
 		
-		[Embed(source = "/../resources/assets/table-tennis.png")]
-		private static const Egg:Class;
-
 		public function Game10()
 		{
 			addEventListener(Event.ADDED_TO_STAGE, onAdded);
@@ -27,10 +26,8 @@ package me.guoyao
 
 		private function onAdded(e:Event):void
 		{
-			// create a Bitmap object out of the embedded image 
-			var brush:Bitmap = new Egg();
 			// create a Texture object to feed the Image object 
-			var texture:Texture = Texture.fromBitmap(brush);
+			var texture:Texture = Assets.getTexture(Assets.TABLE_TENNIS);
 			// create the texture to draw into the texture 
 			mBrush = new Image(texture);
 			// set the registration point

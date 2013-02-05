@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:75437fd9668c61cfd5868c538ded4937$ -->
+<TextureAtlas imagePath="sprite-atlas.png">
+    <SubTexture name="sprite-atlas0001" x="104" y="130" width="100" height="126" frameX="-349" frameY="-236" frameWidth="800" frameHeight="600"/>
+    <SubTexture name="sprite-atlas0002" x="2" y="130" width="100" height="126" frameX="-349" frameY="-236" frameWidth="800" frameHeight="600"/>
+    <SubTexture name="sprite-atlas0003" x="104" y="2" width="100" height="126" frameX="-349" frameY="-236" frameWidth="800" frameHeight="600"/>
+    <SubTexture name="sprite-atlas0004" x="2" y="2" width="100" height="126" frameX="-349" frameY="-236" frameWidth="800" frameHeight="600"/>
+</TextureAtlas>

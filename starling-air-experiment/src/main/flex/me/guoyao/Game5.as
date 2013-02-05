@@ -2,7 +2,9 @@ package me.guoyao
 {
 	import flash.text.Font;
 	import flash.text.TextFieldType;
-
+	
+	import me.guoyao.utils.Assets;
+	
 	import starling.animation.Transitions;
 	import starling.animation.Tween;
 	import starling.core.Starling;
@@ -12,9 +14,6 @@ package me.guoyao
 
 	public class Game5 extends Sprite
 	{
-		[Embed(source = '/../resources/assets/fonts/Abduction.ttf', embedAsCFF = 'false', fontName = 'Abduction')]
-		public static var Abduction:Class;
-
 		public function Game5()
 		{
 			addEventListener(Event.ADDED_TO_STAGE, onAdded);
@@ -23,7 +22,7 @@ package me.guoyao
 		private function onAdded(e:Event):void
 		{
 			// create the font
-			var font:Font = new Abduction();
+			var font:Font = Assets.getFont(Assets.ABDUCTION_FONT);
 			// create the TextField object
 			var legend:TextField = new TextField(300, 300, "Here is some text, using an embedded font!", font.fontName, 38, 0xFFFFFF);
 			legend.border = true;

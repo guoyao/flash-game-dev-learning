@@ -2,6 +2,8 @@ package me.guoyao
 {
 	import flash.display.Bitmap;
 	
+	import me.guoyao.utils.Assets;
+	
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -14,9 +16,6 @@ package me.guoyao
 
 		private const NUM_SAUSAGES:uint = 400;
 
-		[Embed(source = "/../resources/assets/1.png")]
-		private static const Sausage:Class;
-
 		public function Game2()
 		{
 			addEventListener(Event.ADDED_TO_STAGE, onAdded);
@@ -26,11 +25,8 @@ package me.guoyao
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, onAdded);
 
-			// create a Bitmap object out of the embedded image
-			var sausageBitmap:Bitmap = new Sausage();
-
 			// create a Texture object to feed the Image object
-			var texture:Texture = Texture.fromBitmap(sausageBitmap, false);
+			var texture:Texture = Assets.getTexture(Assets.CARTOON_1, false);
 
 			for (var i:int = 0; i < NUM_SAUSAGES; i++)
 			{

@@ -1,6 +1,7 @@
 package me.guoyao
 {
-	import flash.display.Bitmap;
+	import me.guoyao.utils.Assets;
+	
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.events.Event;
@@ -13,9 +14,6 @@ package me.guoyao
 		
 		private static const NUM_PIGS:uint = 400;
 		
-		[Embed(source = "/../resources/assets/table-tennis.png")]
-		private static const TableTennis:Class;
-
 		public function Game6()
 		{
 			addEventListener(Event.ADDED_TO_STAGE, onAdded);
@@ -29,8 +27,7 @@ package me.guoyao
 			container.pivotY = stage.stageHeight >> 1;
 			container.x = stage.stageWidth >> 1;
 			container.y = stage.stageHeight >> 1;
-			var bitmap:Bitmap = new TableTennis();
-			var texture:Texture = Texture.fromBitmap(bitmap);
+			var texture:Texture = Assets.getTexture(Assets.TABLE_TENNIS);
 			for (var i:uint = 0; i < NUM_PIGS; i++)
 			{
 				var pig:Image = new Image(texture);

@@ -1,10 +1,10 @@
 package me.guoyao
 {
-	import flash.display.Bitmap;
 	import flash.ui.Keyboard;
 	
+	import me.guoyao.utils.Assets;
+	
 	import starling.animation.Juggler;
-	import starling.core.Starling;
 	import starling.display.Button;
 	import starling.display.MovieClip;
 	import starling.display.Sprite;
@@ -22,15 +22,6 @@ package me.guoyao
 		
 		private var button:Button;
 		
-		[Embed(source = "/../resources/assets/sprite-atlas.xml", mimeType = "application/octet-stream")]
-		public static const SpriteSheetXML:Class;
-
-		[Embed(source = "/../resources/assets/sprite-atlas.png")]
-		private static const SpriteSheet:Class;
-		
-		[Embed(source = "/../resources/assets/button.png")]
-		private static const ButtonSkin:Class;
-
 		public function Game3()
 		{
 			juggler = new Juggler();
@@ -46,14 +37,9 @@ package me.guoyao
 
 		private function onAdded(e:Event):void
 		{
-			// creates the embedded bitmap (spritesheet file)
-			var bitmap:Bitmap = new SpriteSheet();
-			// creates a texture out of it
-			var texture:Texture = Texture.fromBitmap(bitmap);
 			// creates the XML file detailing the frames in the spritesheet 
-			var xml:XML = XML(new SpriteSheetXML());
 			// creates a texture atlas (binds the spritesheet and XML description) 
-			var sTextureAtlas:TextureAtlas = new TextureAtlas(texture, xml);
+			var sTextureAtlas:TextureAtlas = Assets.getTextureAtlas(Assets.SPRITE_SHEET, Assets.SPRITE_SHEET_XML);
 			// retrieve the frames the running boy frames
 			var frames:Vector.<Texture> = sTextureAtlas.getTextures("sprite-atlas"); // creates a MovieClip playing at 40fps
 			mMovie = new MovieClip(frames, 40);
@@ -68,7 +54,7 @@ package me.guoyao
 			juggler.add(mMovie);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
 			
-			var buttonTexture:Texture = Texture.fromBitmap(new ButtonSkin() as Bitmap, true, false, 1);
+			var buttonTexture:Texture = Assets.getTexture(Assets.BUTTON_SKIN, true, false, 1);
 			button = new Button(buttonTexture, "Pause");
 			button.x = stage.stageWidth - button.width - 10;
 			button.y = 10;

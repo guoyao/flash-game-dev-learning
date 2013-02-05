@@ -1,6 +1,7 @@
 package me.guoyao
 {
-	import flash.display.Bitmap;
+	import me.guoyao.utils.Assets;
+	
 	import starling.display.Button;
 	import starling.display.Image;
 	import starling.display.Sprite;
@@ -9,12 +10,6 @@ package me.guoyao
 
 	public class Game4 extends Sprite
 	{
-		[Embed(source = "/../resources/assets/button.png")]
-		private static const ButtonTexture:Class;
-
-		[Embed(source = "/../resources/assets/background.jpg")]
-		private static const BackgroundImage:Class;
-
 		private var backgroundContainer:Sprite;
 
 		private var background1:Image;
@@ -31,10 +26,8 @@ package me.guoyao
 
 		private function onAdded(e:Event):void
 		{
-			var buttonSkin:Bitmap = new ButtonTexture();
-			var texture:Texture = Texture.fromBitmap(buttonSkin);
-			var background:Bitmap = new BackgroundImage();
-			var textureBackground:Texture = Texture.fromBitmap(background);
+			var texture:Texture = Assets.getTexture(Assets.BUTTON_SKIN);
+			var textureBackground:Texture = Assets.getTexture(Assets.BACKGROUND_SKIN);
 			backgroundContainer = new Sprite();
 			background1 = new Image(textureBackground);
 			background2 = new Image(textureBackground);

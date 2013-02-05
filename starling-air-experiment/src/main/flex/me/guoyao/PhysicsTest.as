@@ -10,6 +10,8 @@ package me.guoyao
 	
 	import fr.kouma.starling.utils.Stats;
 	
+	import me.guoyao.fps.FPS;
+	
 	import starling.display.DisplayObject;
 	import starling.display.Quad;
 	import starling.display.Sprite;
@@ -32,6 +34,7 @@ package me.guoyao
 
 		private function onAdded(e:Event):void
 		{
+//			addChild(new FPS());
 			addChild(new Stats());
 			
 			// Define the gravity vector
