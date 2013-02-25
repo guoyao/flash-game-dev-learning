@@ -3,6 +3,8 @@ package me.guoyao
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.text.TextField;
+	import flash.text.TextFormat;
 	
 	import Box2D.Collision.Shapes.b2PolygonShape;
 	import Box2D.Common.Math.b2Vec2;
@@ -20,10 +22,22 @@ package me.guoyao
 	{
 		private var world:b2World;
 		
+		private var textMon:TextField;
+		
 		public function Totem()
 		{
 			world = new b2World(new b2Vec2(0, 5), true);
 			GameUtil.debugDraw(this, world);
+
+			textMon = new TextField();
+			textMon.x = 100;
+			textMon.textColor = 0xffffff;
+			textMon.width = 300;
+			textMon.height = 300;
+			var textFormat:TextFormat = new TextFormat();
+			textFormat.size = 25;
+			textMon.defaultTextFormat = textFormat;
+			addChild(textMon);
 			
 			var breakableBrickUserData:UserData = new UserData();
 			var unbreakableBrickUserData:UserData = new UserData(false);
@@ -38,7 +52,7 @@ package me.guoyao
 //			brick(215, 210, 30, 60);
 			
 			idol(320, 242);
-			floor();
+			GameUtil.floor(world);
 			
 			addEventListener(Event.ENTER_FRAME, updateWorld);
 			addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
@@ -56,6 +70,30 @@ package me.guoyao
 			var posIterations:int = 10;
 			world.Step(timeStep, velIterations, posIterations);
 			world.ClearForces();
+
+			for (var b:b2Body = world.GetBodyList(); b; b = b.GetNext())
+			{
+				if (b.GetUserData() && (b.GetUserData() as UserData).name == "idol")
+				{
+					var position:b2Vec2 = b.GetPosition();
+					var xPos:Number = Math.round(UnitUtil.metersToPixels(position.x));
+					textMon.text = xPos.toString();
+					textMon.appendText(",");
+					var yPos:Number = Math.round(UnitUtil.metersToPixels(position.y));
+					textMon.appendText(yPos.toString());
+					textMon.appendText("\nangle: ");
+					var angle:Number = Math.round(UnitUtil.radToDeg(b.GetAngle()));
+					textMon.appendText(angle.toString());
+					textMon.appendText("\nVelocity: ");
+					var velocity:b2Vec2 = b.GetLinearVelocity();
+					var xVel:Number = Math.round(UnitUtil.metersToPixels(velocity.x));
+					textMon.appendText(xVel.toString());
+					textMon.appendText(",");
+					var yVel:Number = Math.round(UnitUtil.metersToPixels(velocity.y));
+					textMon.appendText(yVel.toString());
+				}
+			}
+			
 			world.DrawDebugData();
 		}
 
@@ -98,6 +136,7 @@ package me.guoyao
 			var bodyDef:b2BodyDef = new b2BodyDef();
 			bodyDef.position.Set(UnitUtil.pixelsToMeters(pX), UnitUtil.pixelsToMeters(pY));
 			bodyDef.type = b2Body.b2_dynamicBody;
+			bodyDef.userData = new UserData(false, "idol");
 			var polygonShape:b2PolygonShape = new b2PolygonShape();
 			polygonShape.SetAsBox(UnitUtil.pixelsToMeters(5), UnitUtil.pixelsToMeters(20));
 			var fixtureDef:b2FixtureDef = new b2FixtureDef();
@@ -126,20 +165,6 @@ package me.guoyao
 			polygonShape.SetAsVector(vertices, vertices.length);
 			fixtureDef.shape = polygonShape;
 			theIdol.CreateFixture(fixtureDef);
-		}
-
-		private function floor():void
-		{
-			var bodyDef:b2BodyDef = new b2BodyDef();
-			bodyDef.position.Set(UnitUtil.pixelsToMeters(320), UnitUtil.pixelsToMeters(465));
-			var polygonShape:b2PolygonShape = new b2PolygonShape();
-			polygonShape.SetAsBox(UnitUtil.pixelsToMeters(320), UnitUtil.pixelsToMeters(15));
-			var fixtureDef:b2FixtureDef = new b2FixtureDef();
-			fixtureDef.shape = polygonShape;
-			fixtureDef.restitution = 0.4;
-			fixtureDef.friction = 0.5;
-			var theFloor:b2Body = world.CreateBody(bodyDef);
-			theFloor.CreateFixture(fixtureDef);
 		}
 	}
 }

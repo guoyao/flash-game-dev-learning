@@ -4,7 +4,6 @@ package me.guoyao
 	import flash.events.Event;
 	
 	import Box2D.Collision.Shapes.b2CircleShape;
-	import Box2D.Collision.Shapes.b2PolygonShape;
 	import Box2D.Common.Math.b2Vec2;
 	import Box2D.Dynamics.b2Body;
 	import Box2D.Dynamics.b2BodyDef;
@@ -33,14 +32,7 @@ package me.guoyao
 			var theBall:b2Body = world.CreateBody(bodyDef);
 			theBall.CreateFixture(fixtureDef);
 			
-			bodyDef.position.Set(UnitUtil.pixelsToMeters(320), UnitUtil.pixelsToMeters(470));
-			bodyDef.type = b2Body.b2_staticBody;
-			var polygonShape:b2PolygonShape = new b2PolygonShape();
-			polygonShape.SetAsBox(UnitUtil.pixelsToMeters(320), UnitUtil.pixelsToMeters(10));
-			fixtureDef.shape = polygonShape;
-			var theFloor:b2Body = world.CreateBody(bodyDef);
-			theFloor.CreateFixture(fixtureDef);
-			
+			GameUtil.floor(world);
 			GameUtil.debugDraw(this, world);
 			
 			addEventListener(Event.ENTER_FRAME, updateWorld);
