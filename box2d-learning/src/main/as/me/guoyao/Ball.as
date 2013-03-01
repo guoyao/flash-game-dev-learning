@@ -10,6 +10,9 @@ package me.guoyao
 	import Box2D.Dynamics.b2FixtureDef;
 	import Box2D.Dynamics.b2World;
 	
+	import me.guoyao.support.CustomContact;
+	import me.guoyao.support.GameConstants;
+	import me.guoyao.support.UserData;
 	import me.guoyao.utils.GameUtil;
 	import me.guoyao.utils.UnitUtil;
 	
@@ -20,9 +23,11 @@ package me.guoyao
 		public function Ball()
 		{
 			world = new b2World(new b2Vec2(0, 9.81), true);
+			world.SetContactListener(new CustomContact());
 			var bodyDef:b2BodyDef = new b2BodyDef();
 			bodyDef.position.Set(UnitUtil.pixelsToMeters(320), UnitUtil.pixelsToMeters(30));
 			bodyDef.type = b2Body.b2_dynamicBody;
+			bodyDef.userData = new UserData(false, "ball");
 			var circleShape:b2CircleShape = new b2CircleShape(UnitUtil.pixelsToMeters(25));
 			var fixtureDef:b2FixtureDef = new b2FixtureDef();
 			fixtureDef.shape = circleShape;
@@ -32,7 +37,7 @@ package me.guoyao
 			var theBall:b2Body = world.CreateBody(bodyDef);
 			theBall.CreateFixture(fixtureDef);
 			
-			GameUtil.floor(world);
+			GameUtil.ground(world);
 			GameUtil.debugDraw(this, world);
 			
 			addEventListener(Event.ENTER_FRAME, updateWorld);
@@ -40,10 +45,7 @@ package me.guoyao
 		
 		private function updateWorld(e:Event):void
 		{
-			var timeStep:Number = 1 / 60;
-			var velIterations:int = 10;
-			var posIterations:int = 10;
-			world.Step(timeStep, velIterations, posIterations);
+			world.Step(GameConstants.TIME_STEP, GameConstants.VELOCITY_ITERATIONS, GameConstants.POSITION_ITERATIONS);
 			world.ClearForces();
 			world.DrawDebugData();
 		}

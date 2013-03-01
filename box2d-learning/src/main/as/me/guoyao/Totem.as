@@ -13,7 +13,10 @@ package me.guoyao
 	import Box2D.Dynamics.b2Fixture;
 	import Box2D.Dynamics.b2FixtureDef;
 	import Box2D.Dynamics.b2World;
+	import Box2D.Dynamics.Contacts.b2Contact;
+	import Box2D.Dynamics.Contacts.b2ContactEdge;
 	
+	import me.guoyao.support.GameConstants;
 	import me.guoyao.support.UserData;
 	import me.guoyao.utils.GameUtil;
 	import me.guoyao.utils.UnitUtil;
@@ -23,6 +26,8 @@ package me.guoyao
 		private var world:b2World;
 		
 		private var textMon:TextField;
+		
+		private var gameOver:Boolean = false;
 		
 		public function Totem()
 		{
@@ -39,20 +44,20 @@ package me.guoyao
 			textMon.defaultTextFormat = textFormat;
 			addChild(textMon);
 			
-			var breakableBrickUserData:UserData = new UserData();
-			var unbreakableBrickUserData:UserData = new UserData(false);
+			var breakableBrickUserData:UserData = new UserData(true);
+			var unbreakableBrickUserData:UserData = new UserData();
 
-			brick(275, 435, 30, 30, breakableBrickUserData);
-			brick(365, 435, 30, 30, breakableBrickUserData);
-			brick(320, 405, 120, 30, breakableBrickUserData);
-			brick(320, 375, 60, 30, unbreakableBrickUserData);
-			brick(305, 345, 90, 30, breakableBrickUserData);
-			brick(320, 300, 120, 60, unbreakableBrickUserData);
-//			brick(320, 255, 240, 30);
-//			brick(215, 210, 30, 60);
+			GameUtil.brick(world, 275, 435, 30, 30, breakableBrickUserData);
+			GameUtil.brick(world, 365, 435, 30, 30, breakableBrickUserData);
+			GameUtil.brick(world, 320, 405, 120, 30, breakableBrickUserData);
+			GameUtil.brick(world, 320, 375, 60, 30, unbreakableBrickUserData);
+			GameUtil.brick(world, 305, 345, 90, 30, breakableBrickUserData);
+			GameUtil.brick(world, 320, 300, 120, 60, unbreakableBrickUserData);
+//			GameUtil.brick(world, 320, 255, 240, 30);
+//			GameUtil.brick(world, 215, 210, 30, 60);
 			
 			idol(320, 242);
-			GameUtil.floor(world);
+			GameUtil.ground(world);
 			
 			addEventListener(Event.ENTER_FRAME, updateWorld);
 			addEventListener(Event.ADDED_TO_STAGE, onAddToStage);
@@ -60,37 +65,59 @@ package me.guoyao
 		
 		private function onAddToStage(e:Event):void
 		{
+			removeEventListener(Event.ADDED_TO_STAGE, onAddToStage);
 			stage.addEventListener(MouseEvent.CLICK, destroyBrick);
 		}
 		
 		private function updateWorld(e:Event):void
 		{
-			var timeStep:Number = 1 / 60;
-			var velIterations:int = 10;
-			var posIterations:int = 10;
-			world.Step(timeStep, velIterations, posIterations);
+			world.Step(GameConstants.TIME_STEP, GameConstants.VELOCITY_ITERATIONS, GameConstants.POSITION_ITERATIONS);
 			world.ClearForces();
-
-			for (var b:b2Body = world.GetBodyList(); b; b = b.GetNext())
+			if (!gameOver) 
 			{
-				if (b.GetUserData() && (b.GetUserData() as UserData).name == "idol")
+				for (var body:b2Body = world.GetBodyList(); body; body = body.GetNext())
 				{
-					var position:b2Vec2 = b.GetPosition();
-					var xPos:Number = Math.round(UnitUtil.metersToPixels(position.x));
-					textMon.text = xPos.toString();
-					textMon.appendText(",");
-					var yPos:Number = Math.round(UnitUtil.metersToPixels(position.y));
-					textMon.appendText(yPos.toString());
-					textMon.appendText("\nangle: ");
-					var angle:Number = Math.round(UnitUtil.radToDeg(b.GetAngle()));
-					textMon.appendText(angle.toString());
-					textMon.appendText("\nVelocity: ");
-					var velocity:b2Vec2 = b.GetLinearVelocity();
-					var xVel:Number = Math.round(UnitUtil.metersToPixels(velocity.x));
-					textMon.appendText(xVel.toString());
-					textMon.appendText(",");
-					var yVel:Number = Math.round(UnitUtil.metersToPixels(velocity.y));
-					textMon.appendText(yVel.toString());
+					if (body.GetUserData() && (body.GetUserData() as UserData).name == "idol")
+					{
+						var position:b2Vec2 = body.GetPosition();
+						var xPos:Number = Math.round(UnitUtil.metersToPixels(position.x));
+						textMon.text = xPos.toString();
+						textMon.appendText(",");
+						var yPos:Number = Math.round(UnitUtil.metersToPixels(position.y));
+						textMon.appendText(yPos.toString());
+						textMon.appendText("\nangle: ");
+						var angle:Number = Math.round(UnitUtil.radToDeg(body.GetAngle()));
+						textMon.appendText(angle.toString());
+						textMon.appendText("\nVelocity: ");
+						var velocity:b2Vec2 = body.GetLinearVelocity();
+						var xVel:Number = Math.round(UnitUtil.metersToPixels(velocity.x));
+						textMon.appendText(xVel.toString());
+						textMon.appendText(",");
+						var yVel:Number = Math.round(UnitUtil.metersToPixels(velocity.y));
+						textMon.appendText(yVel.toString());
+						for (var c:b2ContactEdge = body.GetContactList(); c; c = c.next)
+						{
+							var contact:b2Contact = c.contact;
+							var fixtureA:b2Fixture = contact.GetFixtureA();
+							var fixtureB:b2Fixture = contact.GetFixtureB();
+							var bodyA:b2Body = fixtureA.GetBody();
+							var bodyB:b2Body = fixtureB.GetBody();
+							var userDataA:UserData = bodyA.GetUserData();
+							var userDataB:UserData = bodyB.GetUserData();
+							if (userDataA.name == GameConstants.GROUND && userDataB.name == "idol")
+							{
+								levelFailed();
+							}
+							if (userDataA.name == "idol" && userDataB.name == GameConstants.GROUND)
+							{
+								levelFailed();
+							}
+//							if (userDataA.name == GameConstants.GROUND || userDataB.name == GameConstants.GROUND)
+//							{
+//								levelFailed();
+//							}
+						}
+					}
 				}
 			}
 			
@@ -99,9 +126,7 @@ package me.guoyao
 
 		private function destroyBrick(e:MouseEvent):void
 		{
-			var pX:Number = UnitUtil.pixelsToMeters(mouseX);
-			var pY:Number = UnitUtil.pixelsToMeters(mouseY);
-			world.QueryPoint(queryCallback, new b2Vec2(pX, pY));
+			world.QueryPoint(queryCallback, GameUtil.mouseToWorld(mouseX, mouseY));
 		}
 
 		private function queryCallback(fixture:b2Fixture):Boolean
@@ -113,24 +138,14 @@ package me.guoyao
 			}
 			return false;
 		}
-		
-		private function brick(pX:int, pY:int, w:Number, h:Number, userData:UserData = null):void
-		{
-			var bodyDef:b2BodyDef = new b2BodyDef();
-			bodyDef.position.Set(UnitUtil.pixelsToMeters(pX), UnitUtil.pixelsToMeters(pY));
-		 	bodyDef.type = b2Body.b2_dynamicBody;
-			bodyDef.userData = userData;
-			var polygonShape:b2PolygonShape = new b2PolygonShape();
-			polygonShape.SetAsBox(UnitUtil.pixelsToMeters(w / 2), UnitUtil.pixelsToMeters(h / 2));
-			var fixtureDef:b2FixtureDef = new b2FixtureDef();
-			fixtureDef.shape = polygonShape;
-			fixtureDef.density = 2;
-			fixtureDef.restitution = 0.4;
-			fixtureDef.friction = 0.5;
-			var theBrick:b2Body = world.CreateBody(bodyDef);
-			theBrick.CreateFixture(fixtureDef);
-		}
 
+		private function levelFailed():void
+		{
+			textMon.text = "Oh no, poor idol!!!";
+			stage.removeEventListener(MouseEvent.CLICK, destroyBrick);
+			gameOver = true;
+		}
+		
 		private function idol(pX:Number, pY:Number):void
 		{
 			var bodyDef:b2BodyDef = new b2BodyDef();
