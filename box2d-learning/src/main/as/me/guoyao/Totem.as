@@ -1,5 +1,6 @@
 package me.guoyao
 {
+	import flash.display.Bitmap;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
@@ -29,6 +30,9 @@ package me.guoyao
 		
 		private var gameOver:Boolean = false;
 		
+		[Embed(source="/../resources/images/Brick_30_30.png")]
+		private static const Brick_30_30:Class;
+		
 		public function Totem()
 		{
 			world = new b2World(new b2Vec2(0, 5), true);
@@ -44,10 +48,10 @@ package me.guoyao
 			textMon.defaultTextFormat = textFormat;
 			addChild(textMon);
 			
-			var breakableBrickUserData:UserData = new UserData(true);
+			var breakableBrickUserData:UserData = new UserData(true, null, new Brick_30_30() as Bitmap);
 			var unbreakableBrickUserData:UserData = new UserData();
 
-			GameUtil.brick(world, 275, 435, 30, 30, breakableBrickUserData);
+			GameUtil.brick(world, 275, 435, 30, 30, breakableBrickUserData, this);
 			GameUtil.brick(world, 365, 435, 30, 30, breakableBrickUserData);
 			GameUtil.brick(world, 320, 405, 120, 30, breakableBrickUserData);
 			GameUtil.brick(world, 320, 375, 60, 30, unbreakableBrickUserData);
@@ -77,45 +81,54 @@ package me.guoyao
 			{
 				for (var body:b2Body = world.GetBodyList(); body; body = body.GetNext())
 				{
-					if (body.GetUserData() && (body.GetUserData() as UserData).name == "idol")
+					if (body.GetUserData() is UserData)
 					{
-						var position:b2Vec2 = body.GetPosition();
-						var xPos:Number = Math.round(UnitUtil.metersToPixels(position.x));
-						textMon.text = xPos.toString();
-						textMon.appendText(",");
-						var yPos:Number = Math.round(UnitUtil.metersToPixels(position.y));
-						textMon.appendText(yPos.toString());
-						textMon.appendText("\nangle: ");
-						var angle:Number = Math.round(UnitUtil.radToDeg(body.GetAngle()));
-						textMon.appendText(angle.toString());
-						textMon.appendText("\nVelocity: ");
-						var velocity:b2Vec2 = body.GetLinearVelocity();
-						var xVel:Number = Math.round(UnitUtil.metersToPixels(velocity.x));
-						textMon.appendText(xVel.toString());
-						textMon.appendText(",");
-						var yVel:Number = Math.round(UnitUtil.metersToPixels(velocity.y));
-						textMon.appendText(yVel.toString());
-						for (var c:b2ContactEdge = body.GetContactList(); c; c = c.next)
+						if((body.GetUserData() as UserData).asset)
 						{
-							var contact:b2Contact = c.contact;
-							var fixtureA:b2Fixture = contact.GetFixtureA();
-							var fixtureB:b2Fixture = contact.GetFixtureB();
-							var bodyA:b2Body = fixtureA.GetBody();
-							var bodyB:b2Body = fixtureB.GetBody();
-							var userDataA:UserData = bodyA.GetUserData();
-							var userDataB:UserData = bodyB.GetUserData();
-							if (userDataA.name == GameConstants.GROUND && userDataB.name == "idol")
+							(body.GetUserData() as UserData).asset.x = UnitUtil.metersToPixels(body.GetPosition().x);
+							(body.GetUserData() as UserData).asset.y = UnitUtil.metersToPixels(body.GetPosition().y);
+							(body.GetUserData() as UserData).asset.rotation = UnitUtil.radToDeg(body.GetAngle());
+						}
+						if ((body.GetUserData() as UserData).name == "idol")
+						{
+							var position:b2Vec2 = body.GetPosition();
+							var xPos:Number = Math.round(UnitUtil.metersToPixels(position.x));
+							textMon.text = xPos.toString();
+							textMon.appendText(",");
+							var yPos:Number = Math.round(UnitUtil.metersToPixels(position.y));
+							textMon.appendText(yPos.toString());
+							textMon.appendText("\nangle: ");
+							var angle:Number = Math.round(UnitUtil.radToDeg(body.GetAngle()));
+							textMon.appendText(angle.toString());
+							textMon.appendText("\nVelocity: ");
+							var velocity:b2Vec2 = body.GetLinearVelocity();
+							var xVel:Number = Math.round(UnitUtil.metersToPixels(velocity.x));
+							textMon.appendText(xVel.toString());
+							textMon.appendText(",");
+							var yVel:Number = Math.round(UnitUtil.metersToPixels(velocity.y));
+							textMon.appendText(yVel.toString());
+							for (var c:b2ContactEdge = body.GetContactList(); c; c = c.next)
 							{
-								levelFailed();
+								var contact:b2Contact = c.contact;
+								var fixtureA:b2Fixture = contact.GetFixtureA();
+								var fixtureB:b2Fixture = contact.GetFixtureB();
+								var bodyA:b2Body = fixtureA.GetBody();
+								var bodyB:b2Body = fixtureB.GetBody();
+								var userDataA:UserData = bodyA.GetUserData();
+								var userDataB:UserData = bodyB.GetUserData();
+								if (userDataA.name == GameConstants.GROUND && userDataB.name == "idol")
+								{
+									levelFailed();
+								}
+								if (userDataA.name == "idol" && userDataB.name == GameConstants.GROUND)
+								{
+									levelFailed();
+								}
+//								if (userDataA.name == GameConstants.GROUND || userDataB.name == GameConstants.GROUND)
+//								{
+//									levelFailed();
+//								}
 							}
-							if (userDataA.name == "idol" && userDataB.name == GameConstants.GROUND)
-							{
-								levelFailed();
-							}
-//							if (userDataA.name == GameConstants.GROUND || userDataB.name == GameConstants.GROUND)
-//							{
-//								levelFailed();
-//							}
 						}
 					}
 				}

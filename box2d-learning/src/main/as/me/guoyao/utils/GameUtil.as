@@ -28,7 +28,7 @@ package me.guoyao.utils
 			world.SetDebugDraw(debugDraw);
 		}
 		
-		public static function brick(world:b2World, pX:int, pY:int, w:Number, h:Number, userData:* = null):void
+		public static function brick(world:b2World, pX:int, pY:int, w:Number, h:Number, userData:* = null, container:Sprite = null):void
 		{
 			var bodyDef:b2BodyDef = new b2BodyDef();
 			bodyDef.position.Set(UnitUtil.pixelsToMeters(pX), UnitUtil.pixelsToMeters(pY));
@@ -37,6 +37,8 @@ package me.guoyao.utils
 			if(userData is UserData)
 			{
 				(userData as UserData).name = "brick";
+				if(container && (userData as UserData).asset)
+					container.addChild((userData as UserData).asset);
 			}
 			bodyDef.userData = userData;
 			var polygonShape:b2PolygonShape = new b2PolygonShape();

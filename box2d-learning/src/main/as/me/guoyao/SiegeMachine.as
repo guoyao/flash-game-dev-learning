@@ -122,6 +122,7 @@ package me.guoyao
 				armJoint.motorSpeed = 6;
 				var siege:b2RevoluteJoint = world.CreateJoint(armJoint) as b2RevoluteJoint;
 				bodyDef.position.Set(UnitUtil.pixelsToMeters(pX - 80), UnitUtil.pixelsToMeters(pY - 115));
+				bodyDef.bullet = true;
 				bodyDef.userData = new UserData(false, "projectile");
 				polygonShape.SetAsBox(UnitUtil.pixelsToMeters(5), UnitUtil.pixelsToMeters(5));
 				fixtureDef.shape = polygonShape;
@@ -129,6 +130,7 @@ package me.guoyao
 				fixtureDef.filter.maskBits = 0x0004;
 				var projectile:b2Body = world.CreateBody(bodyDef);
 				projectile.CreateFixture(fixtureDef);
+				bodyDef.bullet = false;
 				var slingJoint:b2DistanceJointDef = new b2DistanceJointDef();
 				slingJoint.bodyA = arm;
 				slingJoint.bodyB = projectile;

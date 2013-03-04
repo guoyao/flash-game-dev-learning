@@ -1,11 +1,14 @@
 package me.guoyao.support
 {
+	import flash.display.DisplayObject;
+
 	public class UserData
 	{
-		public function UserData(breakable:Boolean = false, name:String = null, type:String = null)
+		public function UserData(breakable:Boolean = false, name:String = null, asset:DisplayObject = null, type:String = null)
 		{
 			this.breakable = breakable;
 			this.name = name;
+			this.asset = asset;
 			this.type = type;
 		}
 		
@@ -13,6 +16,8 @@ package me.guoyao.support
 		
 		public var name:String;
 
+		public var asset:DisplayObject;
+		
 		public var type:String;
 
 		public function toString():String
