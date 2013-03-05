@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:4ee37c76499b71598cfcd5703862729e$ -->
+<TextureAtlas imagePath="hero.png">
+    <SubTexture name="hero-big" x="2" y="2" width="48" height="64" frameX="-8" frameY="0" frameWidth="64" frameHeight="64"/>
+    <SubTexture name="hero-small" x="2" y="68" width="24" height="32" frameX="-4" frameY="0" frameWidth="32" frameHeight="32"/>
+</TextureAtlas>
