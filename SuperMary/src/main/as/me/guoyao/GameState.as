@@ -9,7 +9,9 @@ package me.guoyao
 	
 	import me.guoyao.core.StarlingCitrusEngine;
 	import me.guoyao.core.StarlingState;
+	import me.guoyao.objects.PhysicsEditorObjects;
 	import me.guoyao.utils.Assets;
+	import me.guoyao.utils.ObjectUtil;
 	
 	import starling.display.Image;
 	
@@ -34,19 +36,19 @@ package me.guoyao
 			floor.view = new Image(Assets.textureFromDraw(stage.stageWidth, 20, 0x999999));
 			add(floor);
 			
-//			var hills:Hills = new Hills("hills");
-//			hills.view = new Image(Assets.textureFromDraw(stage.stageWidth, 20, 0x999999));
-//			add(hills);
-			
 			var image:Image = Assets.imageFromSpriteSheet("hero-mary-small");
-			var hero:Hero = new Hero("hero", {x:image.width / 2, y:stage.stageHeight - FLOOR_HEIGHT - image.height / 2, width:image.width, height:image.height});
-			hero.view = image;
+			var hero:Hero = new Hero("hero", ObjectUtil.extend(image, {x:image.width / 2, y:stage.stageHeight - FLOOR_HEIGHT - image.height / 2}));
 			add(hero);
 			
 			image = Assets.imageFromSpriteSheet("enemy-mushroom-small");
-			var enemy:Enemy = new Enemy("mushroom", {x:stage.stageWidth - image.width, y:stage.stageHeight - FLOOR_HEIGHT - image.height, width:image.width, height:image.height, leftBound:image.width / 2, rightBound:stage.stageWidth - image.width / 2});
-			enemy.view = image;
+			var enemy:Enemy = new Enemy("mushroom", ObjectUtil.extend(image, {x:stage.stageWidth - image.width, y:stage.stageHeight - FLOOR_HEIGHT - image.height, leftBound:image.width / 2, rightBound:stage.stageWidth - image.width / 2}));
 			add(enemy);
+			
+			image = Assets.imageFromSpriteSheet("hamburger");
+			add(new PhysicsEditorObjects("hamburger", ObjectUtil.extend(image, {x:300})));
+			
+			image = Assets.imageFromSpriteSheet("icecream");
+			add(new PhysicsEditorObjects("icecream", ObjectUtil.extend(image, {x:300})));
 		}
 	}
 }
