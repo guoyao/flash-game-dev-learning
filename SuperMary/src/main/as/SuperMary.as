@@ -3,7 +3,7 @@ package
 	import me.guoyao.GameState;
 	import me.guoyao.core.StarlingCitrusEngine;
 	
-	[SWF(frameRate="60")]
+	[SWF(width="800", height="600", frameRate="60")]
 	public class SuperMary extends me.guoyao.core.StarlingCitrusEngine
 	{
 		public function SuperMary()

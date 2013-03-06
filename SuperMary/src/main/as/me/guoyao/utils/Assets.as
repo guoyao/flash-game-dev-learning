@@ -1,21 +1,24 @@
 package me.guoyao.utils
 {
 	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+	import flash.display.Sprite;
 	import flash.text.Font;
 	import flash.utils.Dictionary;
 	
+	import starling.display.Image;
 	import starling.textures.Texture;
 	import starling.textures.TextureAtlas;
 
 	public class Assets
 	{
-		[Embed(source = "/../resources/images/hero/hero.png")]
-		public static const Hero:Class;
-		public static const HERO:String = "Hero";
+		[Embed(source = "/../resources/images/sprite-sheet.png")]
+		private static const SpriteSheet:Class;
+		public static const SPRITE_SHEET:String = "SpriteSheet";
 
-		[Embed(source = "/../resources/images/hero/hero.xml", mimeType = "application/octet-stream")]
-		public static const HeroXML:Class;
-		public static const HERO_XML:String = "HeroXML";
+		[Embed(source = "/../resources/images/sprite-sheet.xml", mimeType = "application/octet-stream")]
+		private static const SpriteSheetXML:Class;
+		public static const SPRITE_SHEET_XML:String = "SpriteSheetXML";
 
 		private static var textureDictionary:Dictionary = new Dictionary();
 
@@ -85,6 +88,22 @@ package me.guoyao.utils
 			{
 				throw new Error("Resource not defined.");
 			}
+		}
+		
+		public static function imageFromSpriteSheet(name:String):Image
+		{
+			return new Image(Assets.getTextureAtlas(Assets.SPRITE_SHEET, Assets.SPRITE_SHEET_XML).getTexture(name));
+		}
+		
+		public static function textureFromDraw(width:Number, height:Number, color:uint):Texture
+		{
+			var sprite:Sprite = new Sprite();
+			sprite.graphics.beginFill(color);
+			sprite.graphics.drawRect(0, 0, width, height);
+			sprite.graphics.endFill();
+			var bitmapData:BitmapData = new BitmapData(width, height);
+			bitmapData.draw(sprite);
+			return Texture.fromBitmapData(bitmapData);
 		}
 	}
 }
