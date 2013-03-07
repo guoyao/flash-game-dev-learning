@@ -32,7 +32,7 @@ package me.guoyao
 			super.initialize();
 			
 			var physics:Box2D = new Box2D("box2d", {gravity:new b2Vec2(0, 9.81)});
-			physics.visible = true;
+//			physics.visible = true;
 			add(physics);
 			
 			add(new CitrusSprite("background", ObjectUtil.extend(Assets.imageFromTexture(Assets.BACKGROUND))));
@@ -44,16 +44,17 @@ package me.guoyao
 			add(new Platform("floor-0", {x:504, y:stage.stageHeight - FLOOR_HEIGHT / 2, width:1008, height:FLOOR_HEIGHT}));
 			
 			add(new Platform("floor-1", {x:1253, y:stage.stageHeight - 90, width:586, height:10}));
-			add(new Platform("floor-2", {x:1112, y:stage.stageHeight - 170, width:176, height:10}));
+			add(new Platform("floor-2", {x:1108, y:stage.stageHeight - 190, width:176, height:10}));
 			
 			var image:Image = Assets.imageFromTextureAtlas("hero-mary-small");
 			var hero:Hero = new Hero("hero", ObjectUtil.extend(image, {x:image.width / 2, y:stage.stageHeight - FLOOR_HEIGHT - image.height / 2}));
 			hero.acceleration = 0.1;
+			hero.maxVelocity = 4;
 			hero.jumpAcceleration = 0.1;
 			add(hero);
 			
 			image = Assets.imageFromTextureAtlas("enemy-mushroom-small");
-			var enemy:Enemy = new Enemy("mushroom", ObjectUtil.extend(image, {x:stage.stageWidth - image.width, y:stage.stageHeight - FLOOR_HEIGHT - image.height, leftBound:image.width / 2, rightBound:stage.stageWidth - image.width / 2}));
+			var enemy:Enemy = new Enemy("mushroom", ObjectUtil.extend(image, {x:stage.stageWidth - image.width, y:stage.stageHeight - FLOOR_HEIGHT - image.height, leftBound:image.width / 2, rightBound:1000}));
 			add(enemy);
 			
 //			add(new PhysicsEditorObjects("hamburger", ObjectUtil.extend(Assets.imageFromTextureAtlas("hamburger"), {x:300})));
