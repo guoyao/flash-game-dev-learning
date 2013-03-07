@@ -19,6 +19,10 @@ package me.guoyao.utils
 		[Embed(source = "/../resources/images/sprite-sheet.xml", mimeType = "application/octet-stream")]
 		private static const SpriteSheetXML:Class;
 		public static const SPRITE_SHEET_XML:String = "SpriteSheetXML";
+		
+		[Embed(source = "/../resources/images/background.jpg")]
+		private static const Background:Class;
+		public static const BACKGROUND:String = "Background";
 
 		private static var textureDictionary:Dictionary = new Dictionary();
 
@@ -90,12 +94,22 @@ package me.guoyao.utils
 			}
 		}
 		
-		public static function imageFromSpriteSheet(name:String):Image
+		public static function imageFromTexture(name:String, generateMipMaps:Boolean = true, optimizeForRenderTexture:Boolean = false, scale:Number = 1):Image
 		{
-			return new Image(Assets.getTextureAtlas(Assets.SPRITE_SHEET, Assets.SPRITE_SHEET_XML).getTexture(name));
+			return new Image(getTexture(name, generateMipMaps, optimizeForRenderTexture, scale));
 		}
 		
-		public static function textureFromDraw(width:Number, height:Number, color:uint):Texture
+		public static function imageFromTextureAtlas(name:String, generateMipMaps:Boolean = true, optimizeForRenderTexture:Boolean = false, scale:Number = 1):Image
+		{
+			return new Image(getTextureAtlas(Assets.SPRITE_SHEET, Assets.SPRITE_SHEET_XML, generateMipMaps, optimizeForRenderTexture, scale).getTexture(name));
+		}
+		
+		public static function imageFromDraw(width:Number, height:Number, color:uint):Image
+		{
+			return new Image(textureFromDraw(width, height, color));
+		}
+		
+		private static function textureFromDraw(width:Number, height:Number, color:uint):Texture
 		{
 			var sprite:Sprite = new Sprite();
 			sprite.graphics.beginFill(color);

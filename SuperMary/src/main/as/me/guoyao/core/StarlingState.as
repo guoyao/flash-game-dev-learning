@@ -1,29 +1,24 @@
 package me.guoyao.core
 {
+	import citrus.core.CitrusEngine;
 	import citrus.core.starling.StarlingState;
 	
 	import fr.kouma.starling.utils.Stats;
 	
 	public class StarlingState extends citrus.core.starling.StarlingState
 	{
-		public function StarlingState(engine:StarlingCitrusEngine = null)
+		public function StarlingState()
 		{
 			super();
-			_engine = engine;
 		}
-		
-		private var _engine:StarlingCitrusEngine;
 		
 		override public function initialize():void
 		{
 			super.initialize();
-			if(_engine)
-			{
-				if(_engine.showStats && !_engine.debugMode)
-					addChild(new Stats());
-				
-				_engine = null;				
-			}
+			
+			var engine:CitrusEngine = CitrusEngine.getInstance();
+			if(engine is StarlingCitrusEngine && StarlingCitrusEngine(engine).showStats && !StarlingCitrusEngine(engine).debugMode)
+				addChild(new Stats());
 		}
 	}
 }
