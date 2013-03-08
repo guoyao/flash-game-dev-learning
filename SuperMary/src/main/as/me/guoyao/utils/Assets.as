@@ -2,7 +2,7 @@ package me.guoyao.utils
 {
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
-	import flash.display.Sprite;
+	import flash.display.Shape;
 	import flash.text.Font;
 	import flash.utils.Dictionary;
 	
@@ -23,6 +23,14 @@ package me.guoyao.utils
 		[Embed(source = "/../resources/images/background.jpg")]
 		private static const Background:Class;
 		public static const BACKGROUND:String = "Background";
+		
+		[Embed(source = "/../resources/images/hero.png")]
+		private static const Hero:Class;
+		public static const HERO:String = "Hero";
+		
+		[Embed(source = "/../resources/images/hero.xml", mimeType = "application/octet-stream")]
+		private static const HeroXML:Class;
+		public static const HERO_XML:String = "HeroXML";
 
 		private static var textureDictionary:Dictionary = new Dictionary();
 
@@ -111,12 +119,12 @@ package me.guoyao.utils
 		
 		private static function textureFromDraw(width:Number, height:Number, color:uint):Texture
 		{
-			var sprite:Sprite = new Sprite();
-			sprite.graphics.beginFill(color);
-			sprite.graphics.drawRect(0, 0, width, height);
-			sprite.graphics.endFill();
+			var shape:Shape = new Shape();
+			shape.graphics.beginFill(color);
+			shape.graphics.drawRect(0, 0, width, height);
+			shape.graphics.endFill();
 			var bitmapData:BitmapData = new BitmapData(width, height);
-			bitmapData.draw(sprite);
+			bitmapData.draw(shape);
 			return Texture.fromBitmapData(bitmapData);
 		}
 	}
