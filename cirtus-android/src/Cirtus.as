@@ -1,5 +1,7 @@
 package {
 	
+	import flash.geom.Rectangle;
+	
 	import box2dstarling.ALevel;
 	import box2dstarling.MyGameData;
 	
@@ -16,7 +18,8 @@ package {
 		
 		public function Cirtus() {
 			
-			setUpStarling(true);
+			setUpStarling(true, 1, new Rectangle(0, 0, stage.fullScreenWidth, stage.fullScreenHeight));
+			this.starling.stage.stageHeight = 450;
 			
 			gameData = new MyGameData();
 			

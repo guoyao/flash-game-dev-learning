@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://texturepacker.com-->
+<!-- $TexturePacker:SmartUpdate:068b708e9b45d2235f5f8848c86c4856$ -->
+<TextureAtlas imagePath="sprite-sheet.png">
+    <SubTexture name="enemy-mushroom-big" x="2" y="71" width="64" height="64"/>
+    <SubTexture name="enemy-mushroom-small" x="50" y="137" width="32" height="32"/>
+    <SubTexture name="hamburger" x="2" y="2" width="96" height="67" frameX="-4" frameY="-4" frameWidth="102" frameHeight="73"/>
+    <SubTexture name="hero-mary-big" x="68" y="71" width="48" height="64" frameX="-8" frameY="0" frameWidth="64" frameHeight="64"/>
+    <SubTexture name="hero-mary-small" x="100" y="2" width="24" height="32" frameX="-4" frameY="0" frameWidth="32" frameHeight="32"/>
+    <SubTexture name="icecream" x="2" y="137" width="46" height="106" frameX="-2" frameY="-9" frameWidth="50" frameHeight="118"/>
+</TextureAtlas>
