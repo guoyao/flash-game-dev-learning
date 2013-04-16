@@ -14,9 +14,11 @@
 package
 {
 	import flash.desktop.NativeApplication;
+	import flash.desktop.SystemIdleMode;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.system.Capabilities;
 	import flash.ui.Keyboard;
 	
 	import me.guoyao.utils.StarlingUtil;
@@ -29,14 +31,10 @@ package
 	[SWF(frameRate="60", width="1024", height="768", backgroundColor="0x000000")]
 	
 	/**
-	 * This is the main class of the project. 
-	 * 
 	 * @author hsharma
-	 * 
 	 */
 	public class HungryHero extends Sprite
 	{
-		/** Starling object. */
 		private var myStarling:Starling;
 		
 		public function HungryHero()
@@ -44,39 +42,47 @@ package
 			super();
 			
 			this.addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			if(Capabilities.cpuArchitecture == "ARM")
+			{
+				NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, onActivate);
+				NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, onDeactivate)
+				NativeApplication.nativeApplication.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			}
 		}
 		
-		/**
-		 * On added to stage. 
-		 * @param event
-		 * 
-		 */
 		protected function onAddedToStage(event:Event):void
 		{
 			this.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-			
-			// Initialize Starling object.
 			myStarling = new Starling(Game, stage);
 			StarlingUtil.scaleToFullScreen(myStarling, stage);
-			
-			// Define basic anti aliasing.
 			myStarling.antiAliasing = 1;
-			
-			// Show statistics for memory usage and fps.
 			myStarling.showStats = true;
-			
-			// Position stats.
 			myStarling.showStatsAt("left", "bottom");
-			
-			// Start Starling Framework.
 			myStarling.start();
+		}
+		
+		private function onActivate(event:Event):void
+		{
+			NativeApplication.nativeApplication.systemIdleMode = SystemIdleMode.KEEP_AWAKE;
+		}
+		
+		private function onDeactivate(event:Event):void
+		{
+			exit();
 		}
 		
 		private function onKeyDown(event:KeyboardEvent):void
 		{
 			if(event.keyCode == Keyboard.BACK)
-				NativeApplication.nativeApplication.exit();
+				exit();
+		}
+		
+		private function exit():void
+		{
+			NativeApplication.nativeApplication.removeEventListener(Event.ACTIVATE, onActivate);
+			NativeApplication.nativeApplication.removeEventListener(Event.DEACTIVATE, onDeactivate)
+			NativeApplication.nativeApplication.removeEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
+			NativeApplication.nativeApplication.exit();
 		}
 	}
 }
