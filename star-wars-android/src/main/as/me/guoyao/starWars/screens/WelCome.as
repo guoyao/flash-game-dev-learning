@@ -1,5 +1,6 @@
 package me.guoyao.starWars.screens
 {
+	import me.guoyao.starWars.characters.Hero;
 	import me.guoyao.starWars.utils.Assets;
 	
 	import starling.display.Image;
@@ -9,6 +10,8 @@ package me.guoyao.starWars.screens
 	public class WelCome extends Sprite
 	{
 		private var backgroundImage:Image;
+		
+		private var hero:Hero;
 		
 		public function WelCome()
 		{
@@ -28,6 +31,10 @@ package me.guoyao.starWars.screens
 			backgroundImage.width = stage.stageWidth;
 			backgroundImage.height = stage.stageHeight;
 			addChild(backgroundImage);
+			hero = new Hero();
+			addChild(hero);
+			hero.x = stage.stageWidth >> 1;
+			hero.y = stage.stageHeight - hero.height / 2;
 		}
 	}
 }

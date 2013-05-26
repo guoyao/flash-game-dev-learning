@@ -12,6 +12,10 @@ package me.guoyao.starWars.utils
 		[Embed(source = "/../resources/images/welcome-background.jpg")]
 		private static const WelcomeBackground:Class;
 		public static const WELCOME_BACKGROUND:String = "WelcomeBackground";
+		
+		[Embed(source = "/../resources/images/airplane.png")]
+		private static const Hero:Class;
+		public static const HERO:String = "Hero";
 
 		private static var textureDictionary:Dictionary = new Dictionary();
 
